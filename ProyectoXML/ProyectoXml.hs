@@ -1,5 +1,7 @@
 import Data.List.Split
-
+data Device = Device String String String
+data Group = Group String String
+data Capability = Capability String String
 main = do
 	fileContents <- readFile "nuevo.xml"
   	mapM_ funcion (lines fileContents)
