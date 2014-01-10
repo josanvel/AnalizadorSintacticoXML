@@ -1,7 +1,11 @@
 import Data.List.Split
-data Device = Device String String String
-data Group = Group String String
-data Capability = Capability String String
+data Device = Device {idD:: String
+					 ,	user_agent::String
+					 ,	fall_back::String} deriving(Show)
+data Group = Group {idG:: String}deriving(Show)
+data Capability = Capability {	name::String
+							 , 	value:: String}deriving(Show)
+
 main = do
 	fileContents <- readFile "nuevo.xml"
   	mapM_ funcion (lines fileContents)
