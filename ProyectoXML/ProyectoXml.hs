@@ -11,15 +11,24 @@ setDevice [] = Device "" "" ""
 setDevice all@(a:b:cs) = do
 	Device a b (head cs)
 
+getIdDevice :: Device -> String
+getIdDevice (Device did ua fb) = did
+
 setGroup ::[String] -> Group
 setGroup [] = Group ""
 setGroup lista = do
 	Group (head lista)
+
+getIdGroup :: Group -> String
+getIdGroup (Group gid) = gid
 	
 setCapability ::[String] -> Capability
 setCapability [] = Capability "" ""
 setCapability all@(x:xs) = do
 	Capability x (head xs)
+
+getNameCapability :: Capability -> String
+getNameCapability (Capability name value) = name
 
 main = do
 	fileContents <- readFile "nuevo.xml"
