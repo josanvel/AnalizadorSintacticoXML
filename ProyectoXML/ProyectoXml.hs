@@ -82,8 +82,38 @@ removeLines (x:xs) = do
 				then do
 						putStrLn "\nARCHIVO XML"
 						putStr "Ingrese la Capability del Device: "
+						nameCapability <- getLine
+						let listNew = removeEmpty xs
+						let list = listDevice listNew (Device "" "" "") (Group "") nameCapability
+						menuPrincipal list
 				else
 					removeLines xs
+
+listDevice :: [String] -> Device -> Group -> String-> [String]
+listDevice [] _ _ _ = []
+listDevice (x:xs) device group capabilityUser= do 	
+					let 	list = splitOneOf ("<>= \\\"") x
+					let 	list1 = removeEmpty list
+
+					if ( (head list1) == "device" )
+						then do 
+								let device = setDevice( deviceFunction( list1 ) )
+								let idDevice = getIdDevice(device)
+								[]++listDevice xs device group capabilityUser
+						else if ( (head list1) == "group" ) 
+							then do
+									let group = setGroup( groupFunction( list1 ) )
+									let idGroup = getIdGroup(group)
+									[]++listDevice xs device group capabilityUser
+							else if ( (head list1) == "capability" ) 
+								then do
+										let capability = setCapability( capabilityFunction( list1 ) )
+										let nameCapability = getNameCapability(capability)
+										let idDevice = getIdDevice(device)
+										if nameCapability == capabilityUser
+										then do [idDevice]++listDevice xs device group capabilityUser
+										else []++listDevice xs device group capabilityUser
+								else []++listDevice xs device group capabilityUser
 
 removeEmpty ::[String]->[String]
 removeEmpty [] = []
