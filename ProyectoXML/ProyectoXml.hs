@@ -75,6 +75,23 @@ main = do
 lineFile :: String -> IO [String]
 lineFile cadenaArchivo = return (lines cadenaArchivo)
 
+menuPrincipal ::[String] -> IO()
+menuPrincipal [] = putStrLn "\t\t\tNo exixten Devices con esa Capability"
+menuPrincipal list = do
+	putStrLn "\n\t\t\t\tINGRESE LA OPCION"
+	putStrLn "\t\t1) Cuantos Devices tienen la Capability ingresada"
+	putStrLn "\t\t2) Cuales Devices tienen la Capability ingresada"
+	putStrLn "\t\t3) Desea SALIR"
+	putStr "\t\tIngrese su opcion: "
+	number <- getLine
+	if number == "1"
+	then putStrLn $ "Existen "++show(length list) ++" Device"
+	else if  number == "2"
+		then putStrLn $ "Los Devices son :" ++show( list)
+		else if number == "3"
+			then exitSuccess
+			else menuPrincipal list
+
 removeLines :: [String] -> IO ()
 removeLines [] = return ()
 removeLines (x:xs) = do
@@ -82,10 +99,10 @@ removeLines (x:xs) = do
 				then do
 						putStrLn "\nARCHIVO XML"
 						putStr "Ingrese la Capability del Device: "
-						nameCapability <- getLine
-						let listNew = removeEmpty xs
-						let list = listDevice listNew (Device "" "" "") (Group "") nameCapability
-						menuPrincipal list
+						--nameCapability <- getLine
+						--let listNew = removeEmpty xs
+						--let list = listDevice listNew (Device "" "" "") (Group "") nameCapability
+						--menuPrincipal list
 				else
 					removeLines xs
 
