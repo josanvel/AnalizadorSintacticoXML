@@ -1,4 +1,8 @@
 import Data.List.Split
+import Data.List
+import System.IO
+import System.Exit
+
 data Device = Device {idD:: String
 					 ,	user_agent::String
 					 ,	fall_back::String} deriving(Show)
@@ -21,7 +25,7 @@ setGroup lista = do
 
 getIdGroup :: Group -> String
 getIdGroup (Group gid) = gid
-	
+
 setCapability ::[String] -> Capability
 setCapability [] = Capability "" ""
 setCapability all@(x:xs) = do
@@ -30,19 +34,60 @@ setCapability all@(x:xs) = do
 getNameCapability :: Capability -> String
 getNameCapability (Capability name value) = name
 
+deviceFunction :: [String]->[String]
+deviceFunction [] = []
+deviceFunction all@(x:xs) = do
+	if x=="id"
+	then [head xs]++deviceFunction xs
+	else if x == "user_agent"
+		then [head xs]++deviceFunction xs
+		else if x == "fall_back"
+			then [head xs]++deviceFunction xs
+			else deviceFunction xs
+
+groupFunction :: [String]->[String]
+groupFunction [] = []
+groupFunction all@(x:xs) = do
+	if x=="id"
+	then [head xs]++groupFunction xs
+	else groupFunction xs
+
+capabilityFunction :: [String]->[String]
+capabilityFunction [] = []
+capabilityFunction all@(x:xs) = do
+	if x=="name"
+	then [head xs]++capabilityFunction xs
+	else if x == "value"
+		then [head xs]++capabilityFunction xs
+		else capabilityFunction xs
+
 main = do
-	fileContents <- readFile "nuevo.xml"
-  	mapM_ funcion (lines fileContents)
+	putStrLn "\t\t\t**************************************"
+	putStrLn "\t\t\t     ANALIZADOR SEMANTICO"
+	putStrLn "\t\t\t  José Antonio Vélez Gómez"
+	putStrLn "\t\t\t  Leonel Fernando Ramirez  Gonzalez"
+	putStrLn "\t\t\t  Kevin Guillermo Campuzano Castillo"
+	putStrLn "\t\t\t**************************************"
+	contentFile <- readFile "wurfl-2.3.xml"
+  	file <- lineFile contentFile
+  	removeLines file
 
-eliminar ::[String]->[String]
-eliminar [] = []
-eliminar (x:xs)=do
+lineFile :: String -> IO [String]
+lineFile cadenaArchivo = return (lines cadenaArchivo)
+
+removeLines :: [String] -> IO ()
+removeLines [] = return ()
+removeLines (x:xs) = do
+				if isInfixOf "<device" x 
+				then do
+						putStrLn "\nARCHIVO XML"
+						putStr "Ingrese la Capability del Device: "
+				else
+					removeLines xs
+
+removeEmpty ::[String]->[String]
+removeEmpty [] = []
+removeEmpty (x:xs)=do
 	if x==""
-	then []++eliminar xs
-	else [x]++eliminar xs
-
-funcion :: String -> IO()
-funcion cadena = do
-	let lista = splitOneOf ("<>= \\\"") cadena
-	let lista1 = eliminar lista
-	putStrLn $ show(lista1)
+	then []++removeEmpty xs
+	else [x]++removeEmpty xs
