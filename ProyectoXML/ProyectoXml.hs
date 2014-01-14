@@ -2,6 +2,7 @@ import Data.List.Split
 import Data.List
 import System.IO
 import System.Exit
+import Debug.Trace
 
 data Device = Device {idD:: String
 					 ,	user_agent::String
@@ -75,9 +76,9 @@ main = do
 lineFile :: String -> IO [String]
 lineFile cadenaArchivo = return (lines cadenaArchivo)
 
-menuPrincipal ::[String] -> IO()
-menuPrincipal [] = putStrLn "\t\t\tNo exixten Devices con esa Capability"
-menuPrincipal list = do
+menuPrincipal ::[String] ->String-> IO()
+menuPrincipal [] _ = putStrLn "\t\t\tNo exixten Devices con esa Capability"
+menuPrincipal list nameCapability= do
 	putStrLn "\n\t\t\t\tINGRESE LA OPCION"
 	putStrLn "\t\t1) Cuantos Devices tienen la Capability ingresada"
 	putStrLn "\t\t2) Cuales Devices tienen la Capability ingresada"
@@ -87,50 +88,54 @@ menuPrincipal list = do
 	if number == "1"
 	then putStrLn $ "Existen "++show(length list) ++" Device"
 	else if  number == "2"
-		then putStrLn $ "Los Devices son :" ++show( list)
+		then putStrLn $ "\tLos Devices que tienen la Capability :"++show(nameCapability)++"\n\n"++show( list)
 		else if number == "3"
 			then exitSuccess
-			else menuPrincipal list
+			else menuPrincipal list nameCapability
 
 removeLines :: [String] -> IO ()
 removeLines [] = return ()
 removeLines (x:xs) = do
-				if isInfixOf "<device" x 
+				if isInfixOf "<devices" x 
 				then do
-						putStrLn "\nARCHIVO XML"
-						putStr "Ingrese la Capability del Device: "
-						--nameCapability <- getLine
-						--let listNew = removeEmpty xs
-						--let list = listDevice listNew (Device "" "" "") (Group "") nameCapability
-						--menuPrincipal list
+						putStr "\nIngrese todas los Capability que desee consultar en el Device: "
+						nameCapability <- getLine
+						let listNew = removeEmpty xs
+						let list = listDevice listNew (Device "" "" "") (Group "") nameCapability
+						menuPrincipal list nameCapability
 				else
 					removeLines xs
+suman ::Int->Int->Int
+suman  n m = n+m
+
+listCapability :: String -> [String]
+listCapability [] = []
+listCapability cadena = removeEmpty( splitOneOf(",; \"") cadena)
 
 listDevice :: [String] -> Device -> Group -> String-> [String]
 listDevice [] _ _ _ = []
 listDevice (x:xs) device group capabilityUser= do 	
-					let 	list = splitOneOf ("<>= \\\"") x
+					let 	list = splitOneOf ("<>= \\\"\t\n") x
 					let 	list1 = removeEmpty list
 
 					if ( (head list1) == "device" )
-						then do 
+					then do 
 								let device = setDevice( deviceFunction( list1 ) )
-								let idDevice = getIdDevice(device)
 								[]++listDevice xs device group capabilityUser
-						else if ( (head list1) == "group" ) 
-							then do
+					else if ( (head list1) == "group" ) 
+						then do
 									let group = setGroup( groupFunction( list1 ) )
-									let idGroup = getIdGroup(group)
 									[]++listDevice xs device group capabilityUser
-							else if ( (head list1) == "capability" ) 
-								then do
+						else if ( (head list1) == "capability" ) 
+							then do
 										let capability = setCapability( capabilityFunction( list1 ) )
 										let nameCapability = getNameCapability(capability)
 										let idDevice = getIdDevice(device)
+										
 										if nameCapability == capabilityUser
 										then do [idDevice]++listDevice xs device group capabilityUser
 										else []++listDevice xs device group capabilityUser
-								else []++listDevice xs device group capabilityUser
+							else []++listDevice xs device group capabilityUser
 
 removeEmpty ::[String]->[String]
 removeEmpty [] = []
