@@ -100,8 +100,10 @@ removeLines (x:xs) = do
 				then do
 						putStr "\nIngrese todas los Capability que desee consultar en el Device: "
 						nameCapability <- getLine
+						let listC = listCapability nameCapability
+						let number = length listC
 						let listNew = removeEmpty xs
-						let list = listDevice listNew (Device "" "" "") (Group "") nameCapability
+						let list = listDevice listNew (Device "" "" "") (Group "") listC number number
 						menuPrincipal list nameCapability
 				else
 					removeLines xs
@@ -112,34 +114,36 @@ listCapability :: String -> [String]
 listCapability [] = []
 listCapability cadena = removeEmpty( splitOneOf(",; \"") cadena)
 
-listDevice :: [String] -> Device -> Group -> String-> [String]
-listDevice [] _ _ _ = []
-listDevice (x:xs) device group capabilityUser= do 	
-					let 	list = splitOneOf ("<>= \\\"\t\n") x
-					let 	list1 = removeEmpty list
-
-					if ( (head list1) == "device" )
-					then do 
-								let device = setDevice( deviceFunction( list1 ) )
-								[]++listDevice xs device group capabilityUser
-					else if ( (head list1) == "group" ) 
-						then do
-									let group = setGroup( groupFunction( list1 ) )
-									[]++listDevice xs device group capabilityUser
-						else if ( (head list1) == "capability" ) 
-							then do
-										let capability = setCapability( capabilityFunction( list1 ) )
-										let nameCapability = getNameCapability(capability)
-										let idDevice = getIdDevice(device)
-										
-										if nameCapability == capabilityUser
-										then do [idDevice]++listDevice xs device group capabilityUser
-										else []++listDevice xs device group capabilityUser
-							else []++listDevice xs device group capabilityUser
-
 removeEmpty ::[String]->[String]
 removeEmpty [] = []
 removeEmpty (x:xs)=do
 	if x==""
 	then []++removeEmpty xs
 	else [x]++removeEmpty xs
+
+listDevice :: [String] -> Device -> Group -> [String]->Int ->Int -> [String]
+listDevice [] _ _ _ _ _= []
+listDevice (x:xs) device group capabilityUser@(c:cs)  n1 n2= do 	
+					let 	lista = splitOneOf ("<>= \\\"\t\n") x
+					let 	lista1 = removeEmpty lista
+
+					if ( (head lista1) == "device" )
+						then do 
+								let device = setDevice( deviceFunction( lista1 ) )
+								[]++listDevice xs device group capabilityUser n2 n2
+						else if ( (head lista1) == "group" ) 
+							then do
+									let group = setGroup( groupFunction( lista1 ) )
+									[]++listDevice xs device group capabilityUser n1 n2
+							else if ( (head lista1) == "capability" ) 
+								then do
+										let capability = setCapability( capabilityFunction( lista1 ) )
+										let nameCapability = getNameCapability(capability)
+										let idDevice = getIdDevice(device)
+										if elem nameCapability capabilityUser
+										then do 
+												if(n1 <= 1 )
+												then [idDevice]++listDevice xs device group capabilityUser n2 n2
+												else []++listDevice xs device group capabilityUser (n1-1) n2
+										else []++listDevice xs device group capabilityUser n1 n2
+								else []++listDevice xs device group capabilityUser n1 n2
