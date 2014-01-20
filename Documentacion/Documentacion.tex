@@ -1,0 +1,107 @@
+\documentclass[a4paper,openright,12pt]{report}
+\usepackage[spanish]{babel}			% Permite que partes automáticas del documento aparezcan en castellano.
+\usepackage[utf8]{inputenc}			% Permite escribir tildes y otros caracteres directamente en el .tex
+\usepackage[T1]{fontenc}   		         % Asegura que el documento resultante use caracteres de una fuente
+\usepackage{listings}				% Permite utilizar lenguajes de programacion dentro de latex
+\usepackage{enumerate}				%enumerados
+\usepackage{graphicx}%graficos
+
+\begin{document}
+
+\begin{titlepage}
+
+\begin{center}
+\vspace*{-1in}
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[width=8cm]{./imagenes/espol.jpg}
+\end{center}
+\end{figure}
+FACULTAD DE INGENIERIA EN ELECTRICIDAD Y COMPUTACIÓN\\
+\vspace*{0.15in}
+LENGUAJES DE PROGRAMACIÓN\\
+\vspace*{0.6in}
+\begin{large}
+PROYECTO DE SEGUNDO PARCIAL: HASKELL
+\end{large}
+\vspace*{0.4in}
+\begin{large}
+ANALIZADOR SINTÁCTICO DE UN ARCHIVO XML\\
+\end{large}
+\vspace*{0.3in}
+\rule{80mm}{0.1mm}\\
+\vspace*{0.1in}
+\begin{large}
+Integrantes:\\Leonel Ramírez Gonzalez\\José Vélez Gómez\\Kevin Campuzano Castillo\\ 
+\end{large}
+\end{center}
+\end{titlepage}
+
+\tableofcontents
+\chapter{Objetivos}
+\begin{itemize}
+\item {Aprender como funciona un lenguaje puramente funcional como es Haskell.}
+\item{Recononcer como trabaja un analizador sintáctico, que es una de las partes de un compilador.}
+\item{Utilizar los distintos tipos de funciones que haskell tiene por defecto.}
+\item{Investigar y Aprender el uso de distintos tipos de paquetes y librerias que proporciona este lenguaje de programación}
+\end{itemize}
+
+\chapter{Introducción}
+\textbf{Haskell} es un lenguaje de programación puramente funcional , no estricto y fuertemente tipado que fue disenado por la universidades de Yale y la universidades de Glasgow.\\
+
+Nace en como la solución de la crisis de los años sesenta en la que la mayoria de software que se producía no era fiable, tenian una gran tasa de errores que ponian en grave peligro la confianza de los usuarios en estos sistemas por esta razón se creo este lenguaje como un nuevo modelo de programación al que se lo conoce como programación funcional.\\
+
+Desde su creación se ha ido desarrollando considerablemente como un lenguaje de programación funcional puro, de proposito general por esto Haskell presenta todas las innovaciones de los lenguajes funcionales.\\
+
+ Las caracteristicas mas interesantes de este lenguaje de programacion incluyen el soporte de tipos de datos y funciones recursivas, listas, tuplas,  guardas. Las combinaciones de ellas pueden resultar unas funciones casi triviales cuya version en lenguaje imperativos como  Java, Python,etc pueden llegar a resultar sumamente tediosas de programar.\\
+
+
+\chapter{Alcance del Proyecto}
+Se investigo la manera de hacer parseo, para esto se investigo en libros y tambien se busco referencias en internet,el parseo es basicamente analizar una estructura de simbolos con el objetivo de terminar su estructura gramatica,l como el
+caso de un archivo XML, generalmente un parseo, primero identifica los simbolos de entrada y luego lo va transformando 
+a una estructura mas fácil de entender generalmente un arbol pero en nuestro caso se transforma en una lista de estructura de datos.\\
+
+Para armar la estructura en haskell, un lenguaje nuevo para nosotros, se investigo del propio libro y por lo cual logramos
+realizarla de manera eficiente, las estructuras quedaron de la siguiente forma junto sus funciones respectivas de getter y setter.\\\\\\\\
+
+\lstset{language=Haskell}          % Set your language (you can change the language for each code-block optionally)
+Estructura de la clase Device
+\begin{lstlisting}[frame=single]  % Start your code-block
+
+data Device = Device 
+{ idD:: String ,	
+  user_agent::String,	
+  fall_back::String}
+deriving(Show)
+\end{lstlisting}
+Estructura de la clase Group
+\begin{lstlisting}[frame=single]  % Start your code-block
+
+data Group = Group 
+{idG:: String}
+deriving(Show)
+\end{lstlisting}
+Estructura de la clase Capability
+\begin{lstlisting}[frame=single]  % Start your code-block
+
+data Capability = Capability 
+{name::String ,
+ value:: String}
+deriving(Show)
+\end{lstlisting}
+
+
+\chapter{Observaciones}
+\begin{itemize}
+\item \textbf{Leonel Ramírez Gonzalez}
+\begin{itemize}
+	\item[Ventajas: ]Una de las ventajas que me agrado en haskell fue que al momento de leer el archivo su implementación era mas sencilla de la que se implementa en otros lenguajes.
+	\item[Desventajas: ]Una de las desventajas que encontre yo de Haskell fue la manera de como se reciben los parametros en las funciones.
+\end{itemize}
+\item \textbf{José Vélez Gómez}
+\begin{itemize}
+	\item[Ventajas: ] Lo que me agrado de Haskell fue su potencial con las funciones recursivas y que incluye soporte de tipos de datos junto al manejo de listas, tuplas. Fue una herramienta de gran utilidad para implementar nuestro analizador sintactico.
+	\item[Desventajas: ]Una desventaja era que como era recursivo no podiamos tener un valor guardado, entonces empleamos qeu cada vez que se mandaba a llamar la funcion recursiva le enviabamos ese valor tambien como referencia y cada vez que se llamaba la funcion, teniamos el valor, pero fue un poco complejo decifrar esa manera de tener ese valor actualizado.
+\end{itemize}
+\end{itemize}
+\end{document}
