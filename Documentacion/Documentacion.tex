@@ -90,6 +90,23 @@ data Capability = Capability
 deriving(Show)
 \end{lstlisting}
 
+Esto graficamente se representa como se lo muestra en la figura 1.1, en la cual nosotros decidimos separarlos cada uno por su estructura,en esta parte se tuvo problemas con la decision de como serian las estructuras de los grupos con respecto a que si un grupo lo contenia al otro pero en grupo se llego a la decisión de que ninguno lo contenga a otro. Se lo hizo de esta manera por que no vimos la necesidad de que estuviera asi ya que no lo almacenariamos en un archivo sino que solamente se lo procesaria en el mismo momento en que se forman su estructura.\\
+\begin{figure}[htbp]
+	\begin{center}
+		\includegraphics[width=.90\textwidth]{./imagenes/estructuras.jpg}
+		\caption{Estructura de datos}
+		\label{Estructura de datos}
+	\end{center}
+\end{figure}
+
+Para utilizar las estructuras tuvimos que parsear el archivo de tal manera que los datos se setearan dentro de ellas por esto cada estructura tienen sus funciones getter y setter, al momento de leer el archivo de texto no se habia investigado acerca del paquete \textbf{readFile} pero una vez que se lo aprendio, lo implementamos y nos hizo mas sencillo nuestra labor con el archivo XML.\\
+
+Luego se utilizo la función \textbf{splitOneOf} para separar al string que se obtuvo de la funcion readFile de los caracteres especiales pero nos devolvia espacios vacios innecesarios entonces esto no era como lo deseabamos, para esto implementamos una funcion que remueva estos espacios vacios la denominamos \textbf{removeEmpty} que esto por ultimo nos termino dando una lista de String que era lo que deseabamos.\\
+
+Para trabajar con la lista de Strings lo trabajamos linea a linea, al trabajar de esa manera se procesaban cada una de las lineas que se leian en la que se distinguian por la cabecera de cada linea redirigiendolas a procesos de cada uno de los grupos.\\
+
+Para trabajar linea a linea se utilizo diferentes funciones para cada grupo, para device se utilizo la funcion \textbf{deviceFunction} esta funcion coge a la linea que empieza con la palabra "device" y de ella saca el id del Device, user\_agent y fall\_back, caso contrario tendremos que la linea empezara con la palabra "group" se implementa la funcion \textbf{groupFunction}, esta funcion de la linea que se esta leyendo obtenemos el idGroup y por ultimo tenemos el caso en que la linea empieze con la palabra "capability" aqui utilizamos la funcion \textbf{capabilityFunction} esta funcion nos devuelve de la linea, el name y value de la capability.\\
+
 
 \chapter{Observaciones}
 \begin{itemize}
@@ -102,6 +119,11 @@ deriving(Show)
 \begin{itemize}
 	\item[Ventajas: ] Lo que me agrado de Haskell fue su potencial con las funciones recursivas y que incluye soporte de tipos de datos junto al manejo de listas, tuplas. Fue una herramienta de gran utilidad para implementar nuestro analizador sintactico.
 	\item[Desventajas: ]Una desventaja era que como era recursivo no podiamos tener un valor guardado, entonces empleamos qeu cada vez que se mandaba a llamar la funcion recursiva le enviabamos ese valor tambien como referencia y cada vez que se llamaba la funcion, teniamos el valor, pero fue un poco complejo decifrar esa manera de tener ese valor actualizado.
+\end{itemize}
+\item \textbf{Kevin Campuzano Castillo}
+\begin{itemize}
+	\item[Ventajas: ]La ventaja que note de haskell es que no se tiene que poner en orden a las funciones, es decir es al 	libre albedrio.
+	\item[Desventajas: ] Una de las desventajas para mi fue la forma en la que se debe de recorrer listas en este 		lenguajes, es mas complicado que en otros lenguajes.
 \end{itemize}
 \end{itemize}
 \end{document}
